@@ -1,0 +1,162 @@
+{
+  "mode": "simulation",
+  "runId": "demo-25ba70d1-450b-49a9-8dfc-b330e9df0f27",
+  "createdAt": "2026-09-27T10:57:46.538Z",
+  "policy": {
+    "network": "eip155:84532",
+    "asset": "0x036CbD53842c5426634e7929541eC2318f3dCF7e",
+    "payTo": "0x0000000000000000000000000000000000000001",
+    "perCall": "250000",
+    "budget": "5000000"
+  },
+  "committedBaseUnits": "150000",
+  "confirmedPaidBaseUnits": "0",
+  "decisions": [
+    {
+      "id": "c60b47e5-4f2a-4784-97d7-c8c95b1ddf20",
+      "run_id": "demo-25ba70d1-450b-49a9-8dfc-b330e9df0f27",
+      "time": "2026-09-27T10:57:46.484Z",
+      "endpoint": "rainfall",
+      "amount": "50000",
+      "status": "simulated",
+      "reason": "OFFLINE SIMULATION; no transaction or real signature",
+      "tx": null
+    },
+    {
+      "id": "50065136-7b21-4bf8-9c9c-1ace2d55ad55",
+      "run_id": "demo-25ba70d1-450b-49a9-8dfc-b330e9df0f27",
+      "time": "2026-09-27T10:57:46.495Z",
+      "endpoint": "prices",
+      "amount": "50000",
+      "status": "simulated",
+      "reason": "OFFLINE SIMULATION; no transaction or real signature",
+      "tx": null
+    },
+    {
+      "id": "80047d11-3779-4f95-9555-ebf80318f08b",
+      "run_id": "demo-25ba70d1-450b-49a9-8dfc-b330e9df0f27",
+      "time": "2026-09-27T10:57:46.504Z",
+      "endpoint": "satellite",
+      "amount": "50000",
+      "status": "simulated",
+      "reason": "OFFLINE SIMULATION; no transaction or real signature",
+      "tx": null
+    },
+    {
+      "id": "22ce9adf-1beb-4be0-9770-4c6222a6c929",
+      "run_id": "demo-25ba70d1-450b-49a9-8dfc-b330e9df0f27",
+      "time": "2026-09-27T10:57:46.514Z",
+      "endpoint": "rogue-expensive",
+      "amount": "0",
+      "status": "refused",
+      "reason": "PER_CALL_LIMIT; quoted=4990000",
+      "tx": null
+    },
+    {
+      "id": "e69af2f1-f6d7-484e-9054-00bc5097a172",
+      "run_id": "demo-25ba70d1-450b-49a9-8dfc-b330e9df0f27",
+      "time": "2026-09-27T10:57:46.519Z",
+      "endpoint": "rogue-asset",
+      "amount": "0",
+      "status": "refused",
+      "reason": "ASSET_NOT_ALLOWED; quoted=50000",
+      "tx": null
+    },
+    {
+      "id": "19ec63fc-c2fc-4b71-ba21-df9059b9a81b",
+      "run_id": "demo-25ba70d1-450b-49a9-8dfc-b330e9df0f27",
+      "time": "2026-09-27T10:57:46.523Z",
+      "endpoint": "rogue-network",
+      "amount": "0",
+      "status": "refused",
+      "reason": "NETWORK_NOT_ALLOWED; quoted=50000",
+      "tx": null
+    },
+    {
+      "id": "2770687a-a46b-4755-81d6-c84466646a17",
+      "run_id": "demo-25ba70d1-450b-49a9-8dfc-b330e9df0f27",
+      "time": "2026-09-27T10:57:46.527Z",
+      "endpoint": "rogue-injection",
+      "amount": "0",
+      "status": "refused",
+      "reason": "PER_CALL_LIMIT; quoted=4990000",
+      "tx": null
+    },
+    {
+      "id": "0059d038-3446-4d2c-bb47-d1d7fa2b7e9f",
+      "run_id": "demo-25ba70d1-450b-49a9-8dfc-b330e9df0f27",
+      "time": "2026-09-27T10:57:46.531Z",
+      "endpoint": "rogue-malformed",
+      "amount": "0",
+      "status": "refused",
+      "reason": "INVALID_AMOUNT; quoted=0.05",
+      "tx": null
+    },
+    {
+      "id": "207a5a87-08d5-49c2-8deb-8588eb0057e7",
+      "run_id": "demo-25ba70d1-450b-49a9-8dfc-b330e9df0f27",
+      "time": "2026-09-27T10:57:46.534Z",
+      "endpoint": "rogue-recipient",
+      "amount": "0",
+      "status": "refused",
+      "reason": "RECIPIENT_NOT_ALLOWED; quoted=50000",
+      "tx": null
+    }
+  ],
+  "research": {
+    "text": "OFFLINE DEMONSTRATION — deterministic synthesis, no LLM call.\n\nThe synthetic rainfall fixture projects an 18% positive anomaly. The price fixture shows rice at INR 3,020 versus 3,100 per quintal and maize at INR 2,180 versus 2,250. The satellite fixture reports above-baseline soil moisture. These examples suggest a hypothesis that improved expected supply might coincide with softer prices, while transport disruption could work in the opposite direction. Two illustrative observations cannot establish causality.\n\nNext research step: join dated forecast revisions to daily mandi prices, control for arrivals and seasonality, and compare exposed districts. No conclusion about actual monsoon conditions follows from these synthetic fixtures.\n\nSources: rainfall, prices, satellite. See the ledger for simulated purchases and hostile quote refusals; confirmed real spend is zero.",
+    "evidence": [
+      {
+        "ok": true,
+        "endpoint": "rainfall",
+        "data": "{\"source\":\"Synthetic Bengaluru monsoon forecast fixture, not live observations\",\"period\":\"2026-06\",\"rainfallAnomalyPct\":18,\"forecastConfidence\":\"medium\",\"notes\":\"Above-normal rain may improve sowing but disrupt transport.\"}",
+        "payment": "simulated",
+        "transaction": null
+      },
+      {
+        "ok": true,
+        "endpoint": "prices",
+        "data": "{\"source\":\"Synthetic Karnataka mandi fixture, not live prices\",\"unit\":\"INR/quintal\",\"rows\":[{\"crop\":\"rice\",\"before\":3100,\"after\":3020},{\"crop\":\"maize\",\"before\":2250,\"after\":2180}],\"caveat\":\"Two illustrative observations cannot establish causation.\"}",
+        "payment": "simulated",
+        "transaction": null
+      },
+      {
+        "ok": true,
+        "endpoint": "satellite",
+        "data": "{\"source\":\"Synthetic satellite summary fixture\",\"vegetationAnomaly\":\"positive\",\"soilMoisture\":\"above seasonal baseline\",\"caveat\":\"Illustrative data only; no actual satellite product was fetched.\"}",
+        "payment": "simulated",
+        "transaction": null
+      },
+      {
+        "ok": false,
+        "endpoint": "rogue-expensive",
+        "reason": "PER_CALL_LIMIT"
+      },
+      {
+        "ok": false,
+        "endpoint": "rogue-asset",
+        "reason": "ASSET_NOT_ALLOWED"
+      },
+      {
+        "ok": false,
+        "endpoint": "rogue-network",
+        "reason": "NETWORK_NOT_ALLOWED"
+      },
+      {
+        "ok": false,
+        "endpoint": "rogue-injection",
+        "reason": "PER_CALL_LIMIT"
+      },
+      {
+        "ok": false,
+        "endpoint": "rogue-malformed",
+        "reason": "INVALID_AMOUNT"
+      },
+      {
+        "ok": false,
+        "endpoint": "rogue-recipient",
+        "reason": "RECIPIENT_NOT_ALLOWED"
+      }
+    ]
+  }
+}

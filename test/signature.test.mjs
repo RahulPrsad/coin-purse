@@ -1,0 +1,24 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {generatePrivateKey,privateKeyToAccount} from 'viem/accounts';
+import {recoverTypedDataAddress,encodeEventTopics,encodeAbiParameters,parseAbi} from 'viem';
+import {paymentSigner} from '../src/signer.mjs';
+import {quote} from '../src/sellers.mjs';
+import {NETWORK,ASSET} from '../src/policy.mjs';
+test('real EIP-3009 signature recovers ephemeral buyer and binds exact payment',async()=>{
+ const account=privateKeyToAccount(generatePrivateKey());
+ const q=quote('0x0000000000000000000000000000000000000001','rainfall');
+ const signer=paymentSigner(account,{}), payment=await signer.sign(q,'http://127.0.0.1/rainfall');
+ const a=payment.payload.authorization;
+ const address=await recoverTypedDataAddress({domain:{name:'USDC',version:'2',chainId:84532,verifyingContract:ASSET},primaryType:'TransferWithAuthorization',types:{TransferWithAuthorization:[{name:'from',type:'address'},{name:'to',type:'address'},{name:'value',type:'uint256'},{name:'validAfter',type:'uint256'},{name:'validBefore',type:'uint256'},{name:'nonce',type:'bytes32'}]},message:{...a,value:BigInt(a.value),validAfter:BigInt(a.validAfter),validBefore:BigInt(a.validBefore)},signature:payment.payload.signature});
+ assert.equal(address.toLowerCase(),account.address.toLowerCase());assert.equal(a.value,'50000');assert.equal(a.to,q.payTo);assert.equal(payment.accepted.network,NETWORK);
+ const next=await signer.sign(q,'http://127.0.0.1/rainfall');assert.notEqual(a.nonce,next.payload.authorization.nonce);
+ const abi=parseAbi(['event Transfer(address indexed from, address indexed to, uint256 value)','event AuthorizationUsed(address indexed authorizer, bytes32 indexed nonce)']);
+ const logs=[{address:ASSET,topics:encodeEventTopics({abi,eventName:'Transfer',args:{from:account.address,to:q.payTo}}),data:encodeAbiParameters([{type:'uint256'}],[50000n])},{address:ASSET,topics:encodeEventTopics({abi,eventName:'AuthorizationUsed',args:{authorizer:account.address,nonce:a.nonce}}),data:'0x'}];
+ const client={waitForTransactionReceipt:async()=>({status:'success',logs})};
+ const verifier=paymentSigner(account,client), settlement={success:true,network:NETWORK,transaction:'0x'+'ab'.repeat(32)};
+ assert.equal(await verifier.confirm(settlement,q,payment),settlement.transaction);
+ await assert.rejects(()=>verifier.confirm(settlement,q,next),/TRANSFER_NOT_CONFIRMED/);
+ await assert.rejects(()=>verifier.confirm({...settlement,network:'eip155:1'},q,payment),/INVALID_SETTLEMENT/);
+ logs.pop();await assert.rejects(()=>verifier.confirm(settlement,q,payment),/TRANSFER_NOT_CONFIRMED/);
+});

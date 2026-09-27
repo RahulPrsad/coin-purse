@@ -1,0 +1,21 @@
+{
+  "name": "coin-purse",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.13.0"
+  },
+  "scripts": {
+    "test": "node --test",
+    "demo": "node src/cli.mjs demo",
+    "agent": "node --env-file=.env src/cli.mjs agent",
+    "sellers": "node --env-file=.env src/cli.mjs sellers",
+    "audit": "node --env-file=.env src/cli.mjs audit",
+    "testnet": "node --env-file=.env src/cli.mjs testnet",
+    "check:secrets": "node scripts/check-secrets.mjs"
+  },
+  "dependencies": {
+    "viem": "^2.37.0"
+  }
+}
