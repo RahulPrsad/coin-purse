@@ -70,6 +70,22 @@ npm run audit
 
 Only one exact EIP-3009 offer per challenge is supported. Anything else (multiple offers, other schemes, long timeouts, Permit2, unknown domain/asset/network) fails closed. Seller text/extensions are never treated as authority.
 
+```mermaid
+flowchart TD
+    A[Model calls paid_fetch endpointId] --> B[Unsigned GET request]
+    B --> C{402 Payment Required?}
+    C -->|No| Z1[free: response returned]
+    C -->|Yes| D[Parse x402 v2 PAYMENT-REQUIRED header]
+    D --> E{Passes policy check?<br/>scheme / chain / token /<br/>recipient / domain / amount}
+    E -->|Fails any check| Z2[refused: zero commitment]
+    E -->|Passes| F[BEGIN IMMEDIATE transaction:<br/>reserve amount in SQLite ledger]
+    F --> G[viem signs EIP-3009<br/>TransferWithAuthorization]
+    G --> H[Send PAYMENT-SIGNATURE,<br/>retry once]
+    H --> I{Facilitator /verify + /settle,<br/>on-chain Transfer +<br/>AuthorizationUsed confirmed?}
+    I -->|Confirmed| Z3[paid: ledger updated]
+    I -->|Timeout / crash /<br/>invalid receipt| Z4[uncertain or reserved:<br/>amount stays committed,<br/>no auto-retry]
+```
+
 ## Hostile fixtures
 
 | Endpoint | Attack | Expected refusal |
